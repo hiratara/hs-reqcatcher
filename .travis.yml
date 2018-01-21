@@ -1,37 +1,21 @@
-# NB: don't set `language: haskell` here
-
 sudo: false
+language: c
 
-matrix:
-  include:
+addons:
+  apt:
+    packages:
+    - libgmp-dev
 
 before_install:
-  # ghc
-  - export PATH=/opt/ghc/$GHCVER/bin:$PATH
-  # stack
-  - mkdir -p ~/.local/bin
-  - export PATH=~/.local/bin:$PATH
-  - travis_retry curl -L https://github.com/commercialhaskell/stack/releases/download/v0.1.2.0/stack-0.1.2.0-x86_64-linux.gz | gunzip > ~/.local/bin/stack
-  - chmod a+x ~/.local/bin/stack
-  # versions
-  - stack +RTS -N1 -RTS --version
-  - echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
-
-install:
-  - ./travis_long stack +RTS -N1 -RTS --no-terminal --skip-ghc-check setup
-  - ./travis_long stack +RTS -N1 -RTS --no-terminal --skip-ghc-check test --only-snapshot
+# stack
+- mkdir -p ~/.local/bin
+- export PATH=$HOME/.local/bin:$PATH
+- travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
+- stack --no-terminal setup
 
 script:
-  - stack +RTS -N2 -RTS --no-terminal --skip-ghc-check test
+- stack --no-terminal test
 
 cache:
   directories:
   - $HOME/.stack
-
-# deploy:
-#   provider: hackage
-#   username: 
-#   skip_cleanup: true
-#   on:
-#     condition: "$GHCVER = 7.10.1"
-#     tags: true

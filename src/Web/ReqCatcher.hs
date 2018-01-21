@@ -76,12 +76,12 @@ httpWorker :: CONC.MVar NW.Socket -> WARP.Settings -> WAI.Application -> IO ()
 httpWorker mvar set app =
   EX.bracket
     (NW.socket NW.AF_INET NW.Stream NW.defaultProtocol)
-    NW.sClose
+    NW.close
     (\socket -> do
         -- TODO: set Close-On-Exec to socket
         NW.setSocketOption socket NW.ReuseAddr 1
         let addr = NW.SockAddrInet (toEnum $ WARP.getPort set) 0
-        NW.bindSocket socket addr
+        NW.bind socket addr
         NW.listen socket 1 -- Handle Just 1 connection
         CONC.putMVar mvar socket
         WARP.runSettingsSocket set socket app
@@ -92,19 +92,19 @@ httpWorker mvar set app =
 catchRedirect :: Catcher -> IO WAI.Request
 catchRedirect catcher = do
   req <- CONC.takeMVar (catcherCought catcher)
-  NW.sClose (catcherSocket catcher)
+  NW.close (catcherSocket catcher)
   return req
 
 pickPort :: IO WARP.Port
 pickPort =
   EX.bracket
     (NW.socket NW.AF_INET NW.Stream NW.defaultProtocol)
-    NW.sClose
+    NW.close
     (\sock -> do
         NW.setSocketOption sock NW.ReuseAddr 1
-        NW.bindSocket sock (NW.SockAddrInet 0 0)
+        NW.bind sock (NW.SockAddrInet 0 0)
         port <- NW.socketPort sock
-        NW.sClose sock
+        NW.close sock
         return (fromEnum port))
 
 buildURL :: WARP.Port -> String
