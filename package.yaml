@@ -1,5 +1,5 @@
 name: reqcatcher
-version: 0.1.0.1
+version: 0.1.1.0
 synopsis: A local http server to catch the HTTP redirect
 description: ! 'Manage an http server in your local PC to catch the HTTP
 
