@@ -35,7 +35,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - base
-    - http-client >=0.4 && <0.6
+    - http-client >=0.4 && <0.7
     - http-types
     - HUnit >=1.2 && <1.7
     - lens >=4.7 && <4.18
