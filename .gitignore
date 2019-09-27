@@ -11,3 +11,4 @@
 *.hp
 .stack-work/
 reqcatcher.cabal
+stack.yaml.lock
