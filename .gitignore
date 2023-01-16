@@ -10,5 +10,6 @@
 *.aux
 *.hp
 .stack-work/
+dist-newstyle/
 reqcatcher.cabal
 stack.yaml.lock
